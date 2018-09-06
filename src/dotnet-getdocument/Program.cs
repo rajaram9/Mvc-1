@@ -3,7 +3,6 @@
 
 using System;
 using GetDocument.Commands;
-using GetDocument.Properties;
 using Microsoft.DotNet.Cli.CommandLine;
 
 namespace GetDocument

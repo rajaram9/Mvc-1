@@ -1,7 +1,6 @@
 ﻿// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using GetDocument.Properties;
 using Microsoft.DotNet.Cli.CommandLine;
 
 namespace GetDocument.Commands
@@ -26,12 +25,12 @@ namespace GetDocument.Commands
 
             if (!AssemblyPath.HasValue())
             {
-                throw new CommandException(Resources.MissingOption(AssemblyPath.LongName));
+                throw new CommandException(Resources.FormatMissingOption(AssemblyPath.LongName));
             }
 
             if (!ToolsDirectory.HasValue())
             {
-                throw new CommandException(Resources.MissingOption(ToolsDirectory.LongName));
+                throw new CommandException(Resources.FormatMissingOption(ToolsDirectory.LongName));
             }
         }
     }

@@ -8,7 +8,6 @@ using System.Reflection;
 #if NETCOREAPP2_0
 using System.Runtime.Loader;
 #endif
-using GetDocument.Properties;
 using Microsoft.DotNet.Cli.CommandLine;
 
 namespace GetDocument.Commands
@@ -32,10 +31,10 @@ namespace GetDocument.Commands
 
             _documentName = command.Option(
                 "--documentName <Name>",
-                Resources.DocumentDescription(FallbackDocumentName));
-            _method = command.Option("--method <Name>", Resources.MethodDescription(FallbackMethod));
+                Resources.FormatDocumentDescription(FallbackDocumentName));
+            _method = command.Option("--method <Name>", Resources.FormatMethodDescription(FallbackMethod));
             _output = command.Option("--output <Path>", Resources.OutputDescription);
-            _service = command.Option("--service <QualifiedName>", Resources.ServiceDescription(FallbackService));
+            _service = command.Option("--service <QualifiedName>", Resources.FormatServiceDescription(FallbackService));
             _uri = command.Option("--uri <URI>", Resources.UriDescription);
         }
 
@@ -45,17 +44,17 @@ namespace GetDocument.Commands
 
             if (!_output.HasValue())
             {
-                throw new CommandException(Resources.MissingOption(_output.LongName));
+                throw new CommandException(Resources.FormatMissingOption(_output.LongName));
             }
 
             if (_method.HasValue() && !_service.HasValue())
             {
-                throw new CommandException(Resources.MissingOption(_service.LongName));
+                throw new CommandException(Resources.FormatMissingOption(_service.LongName));
             }
 
             if (_service.HasValue() && !_method.HasValue())
             {
-                throw new CommandException(Resources.MissingOption(_method.LongName));
+                throw new CommandException(Resources.FormatMissingOption(_method.LongName));
             }
         }
 

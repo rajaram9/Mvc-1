@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
-using GetDocument.Properties;
 using Microsoft.DotNet.Cli.CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -49,7 +48,7 @@ namespace GetDocument.Commands
                 _project.Value(),
                 Resources.NoProject,
                 Resources.MultipleProjects);
-            Reporter.WriteVerbose(Resources.UsingProject(projectFile));
+            Reporter.WriteVerbose(Resources.FormatUsingProject(projectFile));
 
             var project = Project.FromFile(
                 projectFile,
@@ -96,7 +95,7 @@ namespace GetDocument.Commands
                         if (targetFramework.Version < new Version(2, 0))
                         {
                             throw new CommandException(
-                                Resources.NETCoreApp1Project(project.Name, targetFramework.Version));
+                                Resources.FormatNETCoreApp1Project(project.Name, targetFramework.Version));
                         }
 
                         args.Add("exec");
@@ -135,11 +134,11 @@ namespace GetDocument.Commands
                         break;
 
                     case ".NETStandard":
-                        throw new CommandException(Resources.NETStandardProject(project.Name));
+                        throw new CommandException(Resources.FormatNETStandardProject(project.Name));
 
                     default:
                         throw new CommandException(
-                            Resources.UnsupportedFramework(project.Name, targetFramework.Identifier));
+                            Resources.FormatUnsupportedFramework(project.Name, targetFramework.Identifier));
                 }
 
                 args.AddRange(_args);
@@ -224,14 +223,14 @@ namespace GetDocument.Commands
             {
                 throw new CommandException(
                     specified
-                        ? Resources.NoProjectInDirectory(path)
+                        ? Resources.FormatNoProjectInDirectory(path)
                         : errorWhenNoProject);
             }
             if (projectFiles.Count != 1)
             {
                 throw new CommandException(
                     specified
-                        ? Resources.MultipleProjectsInDirectory(path)
+                        ? Resources.FormatMultipleProjectsInDirectory(path)
                         : errorWhenMultipleProjects);
             }
 
