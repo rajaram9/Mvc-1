@@ -190,6 +190,10 @@ namespace Microsoft.AspNetCore.Mvc.Internal
 
             var routeOptionsSetup = new MvcCoreRouteOptionsSetup();
             services.Configure<RouteOptions>(routeOptionsSetup.Configure);
+            services.Configure<RouteOptions>(options =>
+            {
+                options.ConstraintMap["upper-case"] = typeof(UpperCaseParameterTransform);
+            });
 
             dataSource.ConventionalEndpointInfos.Add(CreateEndpointInfo(string.Empty, endpointInfoRoute, serviceProvider: services.BuildServiceProvider()));
 
@@ -738,8 +742,8 @@ namespace Microsoft.AspNetCore.Mvc.Internal
         {
             if (serviceProvider == null)
             {
-                var serviceCollection = new ServiceCollection();
-                serviceCollection.AddRouting();
+                var services = new ServiceCollection();
+                services.AddRouting();
                 services.AddSingleton(typeof(UpperCaseParameterTransform), new UpperCaseParameterTransform());
 
 	            var routeOptionsSetup = new MvcCoreRouteOptionsSetup();
