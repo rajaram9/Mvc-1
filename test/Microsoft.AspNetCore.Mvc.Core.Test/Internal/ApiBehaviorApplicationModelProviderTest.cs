@@ -965,40 +965,6 @@ Environment.NewLine + "int b";
         }
 
         [Fact]
-        public void DiscoverApiConvention_DoesNotAddConventionItem_IfActionHasProducesResponseTypeAttribute()
-        {
-            // Arrange
-            var actionModel = new ActionModel(
-                typeof(TestApiConventionController).GetMethod(nameof(TestApiConventionController.Delete)),
-                Array.Empty<object>());
-            actionModel.Filters.Add(new ProducesResponseTypeAttribute(200));
-            var attributes = new[] { new ApiConventionTypeAttribute(typeof(DefaultApiConventions)) };
-
-            // Act
-            ApiBehaviorApplicationModelProvider.DiscoverApiConvention(actionModel, attributes);
-
-            // Assert
-            Assert.Empty(actionModel.Properties);
-        }
-
-        [Fact]
-        public void DiscoverApiConvention_DoesNotAddConventionItem_IfActionHasProducesAttribute()
-        {
-            // Arrange
-            var actionModel = new ActionModel(
-                typeof(TestApiConventionController).GetMethod(nameof(TestApiConventionController.Delete)),
-                Array.Empty<object>());
-            actionModel.Filters.Add(new ProducesAttribute(typeof(object)));
-            var attributes = new[] { new ApiConventionTypeAttribute(typeof(DefaultApiConventions)) };
-
-            // Act
-            ApiBehaviorApplicationModelProvider.DiscoverApiConvention(actionModel, attributes);
-
-            // Assert
-            Assert.Empty(actionModel.Properties);
-        }
-
-        [Fact]
         public void DiscoverApiConvention_DoesNotAddConventionItem_IfNoConventionMatches()
         {
             // Arrange

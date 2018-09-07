@@ -265,12 +265,6 @@ namespace Microsoft.AspNetCore.Mvc.Internal
 
         internal static void DiscoverApiConvention(ActionModel actionModel, ApiConventionTypeAttribute[] apiConventionAttributes)
         {
-            if (actionModel.Filters.OfType<IApiResponseMetadataProvider>().Any())
-            {
-                // If an action already has providers, don't discover any from conventions.
-                return;
-            }
-
             if (ApiConventionResult.TryGetApiConvention(actionModel.ActionMethod, apiConventionAttributes, out var result))
             {
                 actionModel.Properties[typeof(ApiConventionResult)] = result;
