@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 using Resources = Microsoft.AspNetCore.Mvc.Core.Resources;
 
 namespace Microsoft.AspNetCore.Mvc.Internal
@@ -317,6 +318,7 @@ namespace Microsoft.AspNetCore.Mvc.Internal
                 Name = routeModel.Name,
                 SuppressLinkGeneration = routeModel.SuppressLinkGeneration,
                 SuppressPathMatching = routeModel.SuppressPathMatching,
+                RouteTokenTransformer = routeModel.RouteTokenTransformer,
             };
         }
 
@@ -391,13 +393,15 @@ namespace Microsoft.AspNetCore.Mvc.Internal
             {
                 actionDescriptor.AttributeRouteInfo.Template = AttributeRouteModel.ReplaceTokens(
                     actionDescriptor.AttributeRouteInfo.Template,
-                    actionDescriptor.RouteValues);
+                    actionDescriptor.RouteValues,
+                    (ParameterTransformer)actionDescriptor.AttributeRouteInfo.RouteTokenTransformer);
 
                 if (actionDescriptor.AttributeRouteInfo.Name != null)
                 {
                     actionDescriptor.AttributeRouteInfo.Name = AttributeRouteModel.ReplaceTokens(
                         actionDescriptor.AttributeRouteInfo.Name,
-                        actionDescriptor.RouteValues);
+                        actionDescriptor.RouteValues,
+                        (ParameterTransformer)actionDescriptor.AttributeRouteInfo.RouteTokenTransformer);
                 }
             }
             catch (InvalidOperationException ex)

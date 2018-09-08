@@ -18,6 +18,86 @@ namespace Microsoft.AspNetCore.Mvc.FunctionalTests
         }
 
         [Fact]
+        public async Task ParameterTransformer_TokenReplacement_Found()
+        {
+            // Arrange & Act
+            var response = await Client.GetAsync("http://localhost/_ParameterTransformer_/_Test_");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<bool>(body);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task ParameterTransformer_TokenReplacement_NotFound()
+        {
+            // Arrange & Act
+            var response = await Client.GetAsync("http://localhost/ParameterTransformer/Test");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task AttributeParameters_Found()
+        {
+            // Arrange & Act
+            var response = await Client.GetAsync("http://localhost/EndpointRouting/Index");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<bool>(body);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AttributeParameters_DefaultValue_Found()
+        {
+            // Arrange & Act
+            var response = await Client.GetAsync("http://localhost/EndpointRouting");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<bool>(body);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AttributeParameters_ParameterTransformer_Found()
+        {
+            // Arrange & Act
+            var response = await Client.GetAsync("http://localhost/_EndpointRouting_/ParameterTransformer");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            var body = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<bool>(body);
+
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task AttributeParameters_ParameterTransformer_NotFound()
+        {
+            // Arrange & Act
+            var response = await Client.GetAsync("http://localhost/EndpointRouting/ParameterTransformer");
+
+            // Assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
         public async override Task HasEndpointMatch()
         {
             // Arrange & Act

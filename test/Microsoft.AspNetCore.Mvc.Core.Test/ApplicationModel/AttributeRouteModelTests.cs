@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Microsoft.AspNetCore.Routing;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Mvc.ApplicationModels
@@ -20,6 +21,7 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
                 Order = 5,
                 SuppressLinkGeneration = true,
                 SuppressPathMatching = true,
+                RouteTokenTransformer = new TestParameterTransformer(),
             };
 
             // Act
@@ -665,6 +667,14 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
                 Order = order,
                 Name = name
             };
+        }
+
+        private class TestParameterTransformer : ParameterTransformer
+        {
+            public override string Transform(string value)
+            {
+                return value;
+            }
         }
     }
 }

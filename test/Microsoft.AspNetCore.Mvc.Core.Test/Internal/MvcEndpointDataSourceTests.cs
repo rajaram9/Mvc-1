@@ -74,7 +74,7 @@ namespace Microsoft.AspNetCore.Mvc.Internal
 
             Assert.Equal(displayName, matcherEndpoint.DisplayName);
             Assert.Equal(order, matcherEndpoint.Order);
-            Assert.Equal(template, matcherEndpoint.RoutePattern.RawText);
+            Assert.Equal("Template!", matcherEndpoint.RoutePattern.RawText);
         }
 
         [Fact]
@@ -715,11 +715,14 @@ namespace Microsoft.AspNetCore.Mvc.Internal
 
             var services = new ServiceCollection();
             services.AddSingleton(actionDescriptorCollectionProvider);
+            services.AddRouting(options => { });
+            var serviceProvider = services.BuildServiceProvider();
 
             var dataSource = new MvcEndpointDataSource(
                 actionDescriptorCollectionProvider,
                 mvcEndpointInvokerFactory ?? new MvcEndpointInvokerFactory(new ActionInvokerFactory(Array.Empty<IActionInvokerProvider>())),
-                services.BuildServiceProvider());
+                serviceProvider,
+                serviceProvider.GetRequiredService<ParameterPolicyFactory>());
 
             return dataSource;
         }

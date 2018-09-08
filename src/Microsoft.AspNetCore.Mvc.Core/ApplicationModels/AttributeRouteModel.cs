@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Core;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Routing;
 
 namespace Microsoft.AspNetCore.Mvc.ApplicationModels
 {
@@ -44,6 +45,7 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
             Template = other.Template;
             SuppressLinkGeneration = other.SuppressLinkGeneration;
             SuppressPathMatching = other.SuppressPathMatching;
+            RouteTokenTransformer = other.RouteTokenTransformer;
         }
 
         public IRouteTemplateProvider Attribute { get;}
@@ -65,6 +67,8 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
         public bool SuppressPathMatching { get; set; }
 
         public bool IsAbsoluteTemplate => Template != null && IsOverridePattern(Template);
+
+        public ParameterTransformer RouteTokenTransformer { get; set; }
 
         /// <summary>
         /// Combines two <see cref="AttributeRouteModel"/> instances and returns
@@ -103,6 +107,7 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
                 Name = ChooseName(left, right),
                 SuppressLinkGeneration = left.SuppressLinkGeneration || right.SuppressLinkGeneration,
                 SuppressPathMatching = left.SuppressPathMatching || right.SuppressPathMatching,
+                RouteTokenTransformer = left.RouteTokenTransformer ?? right.RouteTokenTransformer,
             };
         }
 
@@ -220,6 +225,11 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
         }
 
         public static string ReplaceTokens(string template, IDictionary<string, string> values)
+        {
+            return ReplaceTokens(template, values, routeTokenTransformer: null);
+        }
+
+        public static string ReplaceTokens(string template, IDictionary<string, string> values, ParameterTransformer routeTokenTransformer)
         {
             var builder = new StringBuilder();
             var state = TemplateParserState.Plaintext;
@@ -369,6 +379,11 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels
                                     token,
                                     string.Join(", ", values.Keys.OrderBy(k => k, StringComparer.OrdinalIgnoreCase)));
                                 throw new InvalidOperationException(message);
+                            }
+
+                            if (routeTokenTransformer != null)
+                            {
+                                value = routeTokenTransformer.Transform(value);
                             }
 
                             builder.Append(value);

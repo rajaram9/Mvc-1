@@ -28,7 +28,7 @@ namespace Microsoft.AspNetCore.Builder
                 // Data we parse from the pattern will be used to fill in the rest of the constraints or
                 // defaults. The parser will throw for invalid routes.
                 ParsedPattern = RoutePatternFactory.Parse(pattern, defaults, constraints);
-                ParameterPolicies = BuildParameterPolicies(parameterPolicyFactory);
+                ParameterPolicies = BuildParameterPolicies(ParsedPattern.Parameters, parameterPolicyFactory);
 
                 Defaults = defaults;
                 // Merge defaults outside of RoutePattern because the defaults will already have values from pattern
@@ -54,11 +54,11 @@ namespace Microsoft.AspNetCore.Builder
         public RouteValueDictionary DataTokens { get; }
         public RoutePattern ParsedPattern { get; private set; }
 
-        private Dictionary<string, IList<IParameterPolicy>> BuildParameterPolicies(ParameterPolicyFactory parameterPolicyFactory)
+        internal static Dictionary<string, IList<IParameterPolicy>> BuildParameterPolicies(IReadOnlyList<RoutePatternParameterPart> parameters, ParameterPolicyFactory parameterPolicyFactory)
         {
             var policies = new Dictionary<string, IList<IParameterPolicy>>(StringComparer.OrdinalIgnoreCase);
 
-            foreach (var parameter in ParsedPattern.Parameters)
+            foreach (var parameter in parameters)
             {
                 foreach (var parameterPolicy in parameter.ParameterPolicies)
                 {

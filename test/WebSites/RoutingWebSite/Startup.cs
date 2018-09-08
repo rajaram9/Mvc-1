@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace RoutingWebSite
@@ -14,8 +15,19 @@ namespace RoutingWebSite
         // Set up application services
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc()
+            services
+                .AddMvc(options =>
+                {
+                    options.Conventions.Add(new ControllerRouteTokenTransformerConvention(
+                        typeof(ParameterTransformerController),
+                        new TestParameterTransformer()));
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services
+                .AddRouting(options =>
+                {
+                    options.ConstraintMap["test-transformer"] = typeof(TestParameterTransformer);
+                });
 
             services.AddScoped<TestResponseGenerator>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
